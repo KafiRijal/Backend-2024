@@ -13,7 +13,7 @@ Route::get('/user', function (Request $request) {
 //     echo "Menampilkan data animals";
 // });
 
-Route::get('/index', [AnimalsController::class, 'index']);
-Route::post('/store', [AnimalsController::class, 'store']);
-Route::put('/update/{id}', [AnimalsController::class, 'update']);
-Route::delete('/delete/{id}', [AnimalsController::class, 'delete']);
+Route::get('/animals', [AnimalsController::class, 'index']);
+Route::post('/animals', [AnimalsController::class, 'store']);
+Route::put('/animals/{id}', [AnimalsController::class, 'update']);
+Route::delete('/animals/{id}', [AnimalsController::class, 'delete']);
