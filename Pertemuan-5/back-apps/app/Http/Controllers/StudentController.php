@@ -13,11 +13,18 @@ class StudentController extends Controller
         // Melihat Data
         // Query Builder, student = DB::table('student')->get();
         $student = Student::all(); // Menggunakan Eloquent
-        $data = [
-            'message' => 'Berhasil akses data',
-            'data' => $student
-        ];
-        return response()->json($data, 200);
+        if ($student) {
+            $data = [
+                'message' => 'Berhasil akses data',
+                'data' => $student
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'message' => 'Data tidak ada'
+            ];
+            return response()->json($data, 404);
+        }
     }
 
     // Fungsi untuk menyimpan data baru
@@ -30,11 +37,18 @@ class StudentController extends Controller
             'jurusan' => $request->jurusan
         ];
         $student = Student::create($input);
-        $data = [
-            'message' => 'Berhasil menambah data',
-            'data' => $student
-        ];
-        return response()->json($data, 200);
+        if ($student) {
+            $data = [
+                'message' => 'Berhasil menambah data',
+                'data' => $student
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'message' => 'Gagal menambah data'
+            ];
+            return response()->json($data, 404);
+        }
     }
 
     // Fungsi untuk mengubah data berdasarkan id
@@ -42,10 +56,10 @@ class StudentController extends Controller
     {
         $student = Student::find($id);
         if ($student) {
-            $student->nama = $request->nama;
-            $student->nim = $request->nim;
-            $student->email = $request->email;
-            $student->jurusan = $request->jurusan;
+            $student->nama = $request->nama ?? $student->nama;
+            $student->nim = $request->nim ?? $student->nim;
+            $student->email = $request->email ?? $student->email;
+            $student->jurusan = $request->jurusan ?? $student->jurusan;
             $student->save();
             $data = [
                 'message' => 'Berhasil mengubah data',
@@ -74,6 +88,22 @@ class StudentController extends Controller
         } else {
             $data = [
                 'message' => 'Data tidak ditemukan'
+            ];
+            return response()->json($data, 404);
+        }
+    }
+    public function show($id)
+    {
+        $student = Student::find($id);
+        if ($student) {
+            $data = [
+                'message' => 'Get detail data',
+                'data' => $student
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'message' => 'Get detail data gagal'
             ];
             return response()->json($data, 404);
         }
