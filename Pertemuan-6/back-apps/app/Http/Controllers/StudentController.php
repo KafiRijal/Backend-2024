@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
@@ -30,25 +31,24 @@ class StudentController extends Controller
     // Fungsi untuk menyimpan data baru
     public function store(Request $request)
     {
-        $input = [
-            'nama' => $request->nama,
-            'nim' => $request->nim,
-            'email' => $request->email,
-            'jurusan' => $request->jurusan
-        ];
-        $student = Student::create($input);
-        if ($student) {
-            $data = [
-                'message' => 'Berhasil menambah data',
-                'data' => $student
-            ];
-            return response()->json($data, 200);
-        } else {
-            $data = [
-                'message' => 'Gagal menambah data'
-            ];
-            return response()->json($data, 404);
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required',
+            'nim' => 'numeric|required',
+            'email' => 'email|required',
+            'jurusan' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation errors',
+                'errors' => $validator->errors()
+            ], 422);
         }
+        $student = Student::create($request->all());
+        $data = [
+            'message' => 'Berhasil menambah data',
+            'data' => $student
+        ];
+        return response()->json($data, 201);
     }
 
     // Fungsi untuk mengubah data berdasarkan id
