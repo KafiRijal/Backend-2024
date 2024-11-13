@@ -44,4 +44,12 @@ class AuthController extends Controller
             return response()->json($data, 401);
         }
     }
+
+    public function redirect()
+    {
+        $data = [
+            'message' => 'Unauthenticated',
+        ];
+        return response()->json($data, 401);
+    }
 }

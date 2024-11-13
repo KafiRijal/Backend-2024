@@ -11,8 +11,11 @@ class PegawaiController extends Controller
     // Fungsi untuk menampilkan semua data
     public function index()
     {
-        // Melihat Data
-        $pegawai = Pegawai::all(); // Menggunakan Eloquent
+        // Fungsi untuk menampilkan semua data pegawai
+        // Mengambil seluruh data pegawai dari database dan mengembalikannya dalam format JSON
+        // Jika berhasil, akan menampilkan pesan "Get All Resource"
+        // Jika gagal, akan menampilkan pesan "Data is empty"
+        $pegawai = Pegawai::all();
         if ($pegawai) {
             $data = [
                 'message' => 'Get All Resource',
@@ -27,7 +30,10 @@ class PegawaiController extends Controller
         }
     }
 
-    // Fungsi untuk menyimpan data baru
+    // Fungsi untuk menyimpan data pegawai baru
+    // Memvalidasi inputan sebelum disimpan ke database
+    // Jika berhasil, akan menampilkan pesan "Resource is added successfully"
+    // Jika gagal, akan menampilkan pesan "Validation errors"
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -37,7 +43,7 @@ class PegawaiController extends Controller
             'address' => 'required',
             'email' => 'email|required',
             'status' => 'required',
-            'date' => 'required',
+            'hired_on' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -53,7 +59,10 @@ class PegawaiController extends Controller
         return response()->json($data, 201);
     }
 
-    // Get Detai Data
+    // Fungsi untuk menampilkan detail data pegawai berdasarkan id
+    // Mengambil data pegawai dari database menggunakan id yang diminta
+    // Jika berhasil, akan menampilkan pesan "Get Detail Resource"
+    // Jika gagal, akan menampilkan pesan "Resource not found"
     public function show($id)
     {
         $pegawai = Pegawai::find($id);
@@ -71,7 +80,10 @@ class PegawaiController extends Controller
         }
     }
 
-    // Fungsi untuk mengubah data berdasarkan id
+    // Fungsi untuk memperbarui data pegawai berdasarkan id
+    // Mengambil data pegawai berdasarkan id dan memperbarui atributnya
+    // Jika berhasil, akan menampilkan pesan "Resource is updated successfully"
+    // Jika gagal, akan menampilkan pesan "Resource not found"
     public function update(Request $request, $id)
     {
         $pegawai = Pegawai::find($id);
@@ -82,7 +94,7 @@ class PegawaiController extends Controller
             $pegawai->address = $request->address ?? $pegawai->address;
             $pegawai->email = $request->email ?? $pegawai->email;
             $pegawai->status = $request->status ?? $pegawai->status;
-            $pegawai->date = $request->date ?? $pegawai->date;
+            $pegawai->hired_on = $request->hired_on ?? $pegawai->hired_on;
             $pegawai->save();
             $data = [
                 'message' => 'Resource is updated successfully',
@@ -97,7 +109,10 @@ class PegawaiController extends Controller
         }
     }
 
-    // Fungsi untuk menghapus data berdasarkan id
+    // Fungsi untuk menghapus data pegawai berdasarkan id
+    // Menghapus data pegawai dari database berdasarkan id
+    // Jika berhasil, akan menampilkan pesan "Resource is delete successfully"
+    // Jika gagal, akan menampilkan pesan "Resource not found"
     public function destroy($id)
     {
         $pegawai = Pegawai::find($id);
@@ -116,10 +131,14 @@ class PegawaiController extends Controller
         }
     }
 
-    // fungsi untuk mencari
+    // Fungsi untuk mencari data pegawai berdasarkan nama
+    // Mencari pegawai berdasarkan nama yang diberikan dan mengembalikan data yang sesuai dengan nama yang diberikaan
+    // Jika berhasil, akan menampilkan pesan "Get Searched Resource"
+    // Jika gagal, akan menampilkan pesan "Resource not found"
+    // Untuk nama yang diberikan, bisa menggunakan nama sebagai key di dalam array
     public function search($name)
     {
-        $pegawai = Pegawai::where($name);
+        $pegawai = Pegawai::where('name', 'like', '%' . $name . '%')->get();
         if ($pegawai) {
             $data = [
                 'message' => 'Get Searched Resource',
@@ -134,10 +153,11 @@ class PegawaiController extends Controller
         }
     }
 
-    // Fungsi untuk mencari status aktif
-    public function active($status)
+    // Fungsi untuk mendapatkan semua data pegawai dengan status aktif
+    // Mengambil data pegawai yang memiliki status aktif dan menghitung totalnya
+    public function active()
     {
-        $pegawai = Pegawai::where($status, 'aktif')->get();
+        $pegawai = Pegawai::where('status', 'active')->get();
         $total = $pegawai->count();
         $data = [
             'message' => 'Get Active Resource',
@@ -147,10 +167,11 @@ class PegawaiController extends Controller
         return response()->json($data, 200);
     }
 
-    // Fungsi untuk mencari status tidak aktif
-    public function inactive($status)
+    // Fungsi untuk mendapatkan semua data pegawai dengan status tidak aktif
+    // Mengambil data pegawai yang memiliki status tidak aktif dan menghitung totalnya
+    public function inactive()
     {
-        $pegawai = Pegawai::where($status, 'tidak aktif')->get();
+        $pegawai = Pegawai::where('status', 'inactive')->get();
         $total = $pegawai->count();
         $data = [
             'message' => 'Get Active Resource',
@@ -160,10 +181,11 @@ class PegawaiController extends Controller
         return response()->json($data, 200);
     }
 
-    // Fungsi untuk mencari status tidak aktif
-    public function terminated($status)
+    // Fungsi untuk mendapatkan semua data pegawai dengan status dihentikan
+    // Mengambil data pegawai yang memiliki status dihentikan dan menghitung totalnya
+    public function terminated()
     {
-        $pegawai = Pegawai::where($status, 'dihentikan')->get();
+        $pegawai = Pegawai::where('status', 'terminated')->get();
         $total = $pegawai->count();
         $data = [
             'message' => 'Get Terminated Resource',
