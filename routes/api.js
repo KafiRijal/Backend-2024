@@ -23,7 +23,7 @@ router.get("/alumni/:id", AlumniController.show);
 router.get("/alumni/search/:name", AlumniController.search);
 router.get("/alumni/status/fresh-graduate", AlumniController.freshGraduate);
 router.get("/alumni/status/employed", AlumniController.employed);
-router.get("/alumni/status/employed", AlumniController.unemployed);
+router.get("/alumni/status/unemployed", AlumniController.unemployed);
 
 // export router
 module.exports = router;
