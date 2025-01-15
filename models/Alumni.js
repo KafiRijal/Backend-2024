@@ -66,8 +66,8 @@ class Alumni {
   // fungsi untuk mencari data alumni berdasarkan nama
   static search(name) {
     return new Promise((resolve, reject) => {
-      const sql = "SELECT * FROM alumni WHERE name = ?";
-      db.query(sql, name, (err, results) => {
+      const sql = "SELECT * FROM alumni WHERE name LIKE ?";
+      db.query(sql, [`%${name}%`], (err, results) => {
         if (err) reject(err);
         const [alumni] = results;
         resolve(alumni);
