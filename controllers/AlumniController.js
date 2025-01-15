@@ -3,7 +3,7 @@ const Alumni = require("../models/Alumni");
 
 // buat class AlumniController
 class AlumniController {
-  // buat fungsi
+  // fungsi untuk mendapatkan semua data alumni
   async index(req, res) {
     const alumni = await Alumni.all();
     if (alumni && alumni.length > 0) {
@@ -19,7 +19,7 @@ class AlumniController {
       return res.status(200).json(data);
     }
   }
-
+  // fungsi untuk menambahkan data alumni
   async store(req, res) {
     const {
       name,
@@ -31,6 +31,7 @@ class AlumniController {
       position,
     } = req.body;
 
+    //validasi input data
     if (
       !name ||
       !phone ||
@@ -45,6 +46,7 @@ class AlumniController {
       };
       return res.status(422).json(data);
     }
+    // menambahkan data alumni ke database
     const alumni = await Alumni.create(req.body);
     const data = {
       message: "Resource is added successfully",
@@ -53,6 +55,7 @@ class AlumniController {
     return res.status(201).json(data);
   }
 
+  // fungsi untuk mengupdate data alumni menggunakan parameter id
   async update(req, res) {
     const { id } = req.params;
     // mencari id alumni yang mau diupdate
@@ -74,6 +77,7 @@ class AlumniController {
     }
   }
 
+  // fungsi untuk menghapus data alumni menggunakan parameter id
   async destroy(req, res) {
     const { id } = req.params;
     // mencari id alumni yang mau dihapus
@@ -94,6 +98,7 @@ class AlumniController {
     }
   }
 
+  // fungsi untuk menampilkan detail data alumni menggunakan parameter id
   async show(req, res) {
     const { id } = req.params;
     // mencari id alumni yang mau ditampilkan
@@ -113,6 +118,7 @@ class AlumniController {
     }
   }
 
+  // fungsi untuk mencari data alumni menggunakan parameter nama
   async search(req, res) {
     const { name } = req.params;
     // mencari nama alumni yang mau ditampilkan
@@ -132,8 +138,9 @@ class AlumniController {
     }
   }
 
+  // fungsi untuk mendapatkan data alumni dengan status fresh graduate
   async freshGraduate(req, res) {
-    const { status } = "fresh-graduate";
+    const status = "fresh-graduate";
     // mencari status alumni yang mau ditampilkan
     const alumni = await Alumni.findByStatus(status);
     const total_alumni = await Alumni.countByStatus(status);
@@ -148,8 +155,9 @@ class AlumniController {
     }
   }
 
+  // fungsi untuk mendapatkan data alumni dengan status employed
   async employed(req, res) {
-    const { status } = "employed";
+    const status = "employed";
     // mencari status alumni yang mau ditampilkan
     const alumni = await Alumni.findByStatus(status);
     const total_alumni = await Alumni.countByStatus(status);
@@ -164,8 +172,9 @@ class AlumniController {
     }
   }
 
+  // fungsi untuk mendapatkan data alumni dengan status unemployed
   async unemployed(req, res) {
-    const { status } = "unemployed";
+    const status = "unemployed";
     // mencari status alumni yang mau ditampilkan
     const alumni = await Alumni.findByStatus(status);
     const total_alumni = await Alumni.countByStatus(status);
